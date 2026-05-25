@@ -1641,15 +1641,15 @@
                         <div class="quiz-progress-bar-fill" style="width: 33.3%"></div>
                     </div>
                 </div>
-                <h3 class="quiz-question">Which device ecosystem do you primarily live in?</h3>
+                <h3 class="quiz-question">What is your primary use case and preference for long-wear comfort?</h3>
                 <div class="quiz-options-container">
                     <button class="quiz-option-card apple-opt" onclick="nextQuizStep(1, 'apple')">
-                        <span class="option-title">Apple Only</span>
-                        <span class="option-desc">I use an iPhone, Mac, and iPad. Seamless spatial head-tracking and iCloud device handoff are highly valuable to me.</span>
+                        <span class="option-title">Build Quality & Office</span>
+                        <span class="option-desc">I want luxury metal materials (anodized aluminum) and don't mind a heavier headset (384g) in exchange for state-of-the-art durability.</span>
                     </button>
                     <button class="quiz-option-card sony-opt" onclick="nextQuizStep(1, 'sony')">
-                        <span class="option-title">Multi-Platform / Android / PC</span>
-                        <span class="option-desc">I use Android, Windows, Linux, or a mixture of platforms. I need true multipoint Bluetooth connection to two devices simultaneously.</span>
+                        <span class="option-title">Comfort, Travel & Portability</span>
+                        <span class="option-desc">I travel often, want a lightweight headset (254g) that folds completely flat, and comes with a solid travel case rather than a sleeve.</span>
                     </button>
                 </div>
             </div>
@@ -1662,15 +1662,15 @@
                         <div class="quiz-progress-bar-fill" style="width: 66.6%"></div>
                     </div>
                 </div>
-                <h3 class="quiz-question">What is your primary use case and preference for long-wear comfort?</h3>
+                <h3 class="quiz-question">How critical is battery life and standardized charging to you?</h3>
                 <div class="quiz-options-container">
                     <button class="quiz-option-card apple-opt" onclick="nextQuizStep(2, 'apple')">
-                        <span class="option-title">Build Quality & Office</span>
-                        <span class="option-desc">I want luxury metal materials (anodized aluminum) and don't mind a heavier headset (384g) in exchange for state-of-the-art durability.</span>
+                        <span class="option-title">20 hrs is plenty</span>
+                        <span class="option-desc">I don't mind charging more frequently, and I still have/use Lightning cables regularly.</span>
                     </button>
                     <button class="quiz-option-card sony-opt" onclick="nextQuizStep(2, 'sony')">
-                        <span class="option-title">Comfort, Travel & Portability</span>
-                        <span class="option-desc">I travel often, want a lightweight headset (254g) that folds completely flat, and comes with a solid travel case rather than a sleeve.</span>
+                        <span class="option-title">Crucial</span>
+                        <span class="option-desc">I need 30+ hours of continuous ANC battery life and want the industry-standard USB-C charging connector.</span>
                     </button>
                 </div>
             </div>
@@ -1683,15 +1683,15 @@
                         <div class="quiz-progress-bar-fill" style="width: 100%"></div>
                     </div>
                 </div>
-                <h3 class="quiz-question">How critical is battery life and standardized charging to you?</h3>
+                <h3 class="quiz-question">Which device ecosystem do you primarily live in?</h3>
                 <div class="quiz-options-container">
                     <button class="quiz-option-card apple-opt" onclick="nextQuizStep(3, 'apple')">
-                        <span class="option-title">20 hrs is plenty</span>
-                        <span class="option-desc">I don't mind charging more frequently, and I still have/use Lightning cables regularly.</span>
+                        <span class="option-title">Apple Only</span>
+                        <span class="option-desc">I use an iPhone, Mac, and iPad. Seamless spatial head-tracking and iCloud device handoff are highly valuable to me.</span>
                     </button>
                     <button class="quiz-option-card sony-opt" onclick="nextQuizStep(3, 'sony')">
-                        <span class="option-title">Crucial</span>
-                        <span class="option-desc">I need 30+ hours of continuous ANC battery life and want the industry-standard USB-C charging connector.</span>
+                        <span class="option-title">Multi-Platform / Android / PC</span>
+                        <span class="option-desc">I use Android, Windows, Linux, or a mixture of platforms. I need true multipoint Bluetooth connection to two devices simultaneously.</span>
                     </button>
                 </div>
             </div>
@@ -2487,12 +2487,13 @@
 
         // Personalized Quiz Decision Matrix
         let quizAnswers = {
-            apple: 0,
-            sony: 0
+            step1: '',
+            step2: '',
+            step3: ''
         };
 
         function nextQuizStep(currentStep, answer) {
-            quizAnswers[answer]++;
+            quizAnswers[`step${currentStep}`] = answer;
 
             const currentSlide = document.getElementById(`quizStep${currentStep}`);
             currentSlide.classList.remove('active');
@@ -2507,10 +2508,28 @@
 
         function showQuizResult() {
             let resultContainer;
-            if (quizAnswers.apple >= quizAnswers.sony) {
-                resultContainer = document.getElementById('quizResultApple');
-            } else {
+            // Ecosystem is the last question (Step 3).
+            // If the user's primary ecosystem is Multi-Platform/Android/PC (step3 is 'sony'),
+            // they must be recommended the Sony WH-1000XM4 because the AirPods Max are highly platform-locked.
+            if (quizAnswers.step3 === 'sony') {
                 resultContainer = document.getElementById('quizResultSony');
+            } else {
+                // If they live in the Apple Only ecosystem (step3 is 'apple'),
+                // calculate preference scores based on the first two questions.
+                let appleScore = 0;
+                let sonyScore = 0;
+
+                if (quizAnswers.step1 === 'apple') appleScore++;
+                else sonyScore++;
+
+                if (quizAnswers.step2 === 'apple') appleScore++;
+                else sonyScore++;
+
+                if (appleScore >= sonyScore) {
+                    resultContainer = document.getElementById('quizResultApple');
+                } else {
+                    resultContainer = document.getElementById('quizResultSony');
+                }
             }
             resultContainer.classList.add('active');
             resultContainer.style.display = 'flex';
@@ -2518,8 +2537,9 @@
 
         function resetQuiz() {
             // Reset scores
-            quizAnswers.apple = 0;
-            quizAnswers.sony = 0;
+            quizAnswers.step1 = '';
+            quizAnswers.step2 = '';
+            quizAnswers.step3 = '';
 
             // Hide results
             document.getElementById('quizResultApple').style.display = 'none';
