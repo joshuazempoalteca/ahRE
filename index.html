@@ -204,12 +204,10 @@
 
         .brand-spotlight.left-apple:hover {
             background: radial-gradient(circle at center, var(--apple-glow) 0%, transparent 70%);
-            transform: translateY(-8px);
         }
 
         .brand-spotlight.right-sony:hover {
             background: radial-gradient(circle at center, var(--sony-glow) 0%, transparent 70%);
-            transform: translateY(-8px);
         }
 
         .brand-logo-badge {
@@ -325,10 +323,7 @@
             transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .brand-spotlight:hover .product-image {
-            animation-play-state: paused;
-            transform: translateY(-15px) rotateY(15deg) rotateX(-5deg) scale(1.05);
-        }
+
 
         @keyframes float-headphone {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -709,6 +704,134 @@
         .legend-indicator.apple-ind { background: var(--apple-blue); }
         .legend-indicator.sony-ind  { background: var(--sony-gold); }
 
+        /* ── AUDIO FIDELITY SWITCHER WIDGET ── */
+        .audio-fidelity-analyzer {
+            margin-top: 40px;
+            border-top: 1px solid var(--divider);
+            padding-top: 36px;
+        }
+
+        .fidelity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .fidelity-info h4 {
+            font-family: var(--font-sub);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .fidelity-info p {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .fidelity-toggle-container {
+            display: flex;
+            background: var(--bg-pill);
+            border: 1px solid var(--border-color);
+            padding: 4px;
+            border-radius: 12px;
+        }
+
+        .fidelity-toggle-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font-sub);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fidelity-toggle-btn.active {
+            background: var(--text-primary);
+            color: var(--bg-main);
+        }
+
+        .fidelity-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .fidelity-col {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .col-head {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .fidelity-stat-card {
+            background: rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            align-items: center;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            font-weight: 600;
+            font-family: var(--font-sub);
+            transition: color 0.3s ease;
+        }
+
+        .fidelity-bar-track {
+            height: 6px;
+            background: var(--bg-pill);
+            border-radius: 4px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .fidelity-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .fidelity-bar-fill.apple-bar {
+            background: var(--apple-gradient);
+            box-shadow: 0 0 10px var(--apple-blue);
+        }
+
+        .fidelity-bar-fill.sony-bar {
+            background: var(--sony-gradient);
+            box-shadow: 0 0 10px var(--sony-gold);
+        }
+
+        @media (max-width: 768px) {
+            .fidelity-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
 
         /* ── HELP ME CHOOSE QUIZ REDESIGN ── */
         .quiz-card {
@@ -1620,6 +1743,78 @@
                 <div class="legend-item">
                     <div class="legend-indicator sony-ind"></div>
                     <span>Sony WH-1000XM4 (Warm, bass-forward, fun V-shaped consumer signature)</span>
+                </div>
+            </div>
+
+            <!-- Audio Mode Switcher Subsection -->
+            <div class="audio-fidelity-analyzer">
+                <div class="fidelity-header">
+                    <div class="fidelity-info">
+                        <h4>Connection & Fidelity Analyzer</h4>
+                        <p>Analyze how bitrate, connection method, and audio latency dynamically shift between wireless and high-fidelity wired/LDAC modes.</p>
+                    </div>
+                    <div class="fidelity-toggle-container">
+                        <button class="fidelity-toggle-btn active" id="btnFidelityWireless" onclick="switchFidelityMode('wireless')">Standard Wireless</button>
+                        <button class="fidelity-toggle-btn" id="btnFidelityLossless" onclick="switchFidelityMode('lossless')">Lossless / High-Res</button>
+                    </div>
+                </div>
+                
+                <div class="fidelity-grid">
+                    <!-- Apple Column -->
+                    <div class="fidelity-col apple-col">
+                        <div class="col-head">
+                            <span class="badge-apple">Apple AirPods Max</span>
+                        </div>
+                        <div class="fidelity-stat-card">
+                            <div class="stat-row">
+                                <span class="stat-label">Connection Mode</span>
+                                <span class="stat-value" id="appleFidelityMode">Bluetooth 5.0 (AAC)</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Max Bitrate</span>
+                                <span class="stat-value" id="appleFidelityBitrate">256 kbps</span>
+                            </div>
+                            <div class="fidelity-bar-track">
+                                <div class="fidelity-bar-fill apple-bar" id="appleFidelityBar" style="width: 25.6%;"></div>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Latency</span>
+                                <span class="stat-value" id="appleFidelityLatency" style="color: var(--lose);">~130 ms</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Audio Quality</span>
+                                <span class="stat-value" id="appleFidelityQuality">Standard Premium (Lossy)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sony Column -->
+                    <div class="fidelity-col sony-col">
+                        <div class="col-head">
+                            <span class="badge-sony" style="border-color: rgba(229,185,76,0.3); background: rgba(229,185,76,0.06);">Sony WH-1000XM4</span>
+                        </div>
+                        <div class="fidelity-stat-card">
+                            <div class="stat-row">
+                                <span class="stat-label">Connection Mode</span>
+                                <span class="stat-value" id="sonyFidelityMode">Bluetooth 5.0 (AAC)</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Max Bitrate</span>
+                                <span class="stat-value" id="sonyFidelityBitrate">328 kbps</span>
+                            </div>
+                            <div class="fidelity-bar-track">
+                                <div class="fidelity-bar-fill sony-bar" id="sonyFidelityBar" style="width: 32.8%;"></div>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Latency</span>
+                                <span class="stat-value" id="sonyFidelityLatency" style="color: var(--lose);">~140 ms</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Audio Quality</span>
+                                <span class="stat-value" id="sonyFidelityQuality">Standard Premium (Lossy)</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2623,6 +2818,105 @@
                 fill.style.width = val + '%';
             });
         }
+
+        // Connection & Fidelity Analyzer Switcher Logic
+        function switchFidelityMode(mode) {
+            const btnWireless = document.getElementById('btnFidelityWireless');
+            const btnLossless = document.getElementById('btnFidelityLossless');
+
+            if (mode === 'wireless') {
+                btnWireless.classList.add('active');
+                btnLossless.classList.remove('active');
+
+                // Apple Stats
+                document.getElementById('appleFidelityMode').innerText = 'Bluetooth 5.0 (AAC)';
+                document.getElementById('appleFidelityBitrate').innerText = '256 kbps';
+                document.getElementById('appleFidelityBar').style.width = '25.6%';
+                document.getElementById('appleFidelityLatency').innerText = '~130 ms';
+                document.getElementById('appleFidelityLatency').style.color = 'var(--lose)';
+                document.getElementById('appleFidelityQuality').innerText = 'Standard Premium (Lossy)';
+
+                // Sony Stats
+                document.getElementById('sonyFidelityMode').innerText = 'Bluetooth 5.0 (AAC)';
+                document.getElementById('sonyFidelityBitrate').innerText = '328 kbps';
+                document.getElementById('sonyFidelityBar').style.width = '32.8%';
+                document.getElementById('sonyFidelityLatency').innerText = '~140 ms';
+                document.getElementById('sonyFidelityLatency').style.color = 'var(--lose)';
+                document.getElementById('sonyFidelityQuality').innerText = 'Standard Premium (Lossy)';
+            } else {
+                btnWireless.classList.remove('active');
+                btnLossless.classList.add('active');
+
+                // Apple Stats
+                document.getElementById('appleFidelityMode').innerText = 'Wired (Lightning-to-3.5mm)';
+                document.getElementById('appleFidelityBitrate').innerText = '1,411 kbps';
+                document.getElementById('appleFidelityBar').style.width = '100%';
+                document.getElementById('appleFidelityLatency').innerText = '~0 ms (Analog Direct)';
+                document.getElementById('appleFidelityLatency').style.color = 'var(--win)';
+                document.getElementById('appleFidelityQuality').innerText = 'Lossless CD Quality (Pure)';
+
+                // Sony Stats
+                document.getElementById('sonyFidelityMode').innerText = 'Wired 3.5mm OR LDAC Wireless';
+                document.getElementById('sonyFidelityBitrate').innerText = '990 - 1,411 kbps';
+                document.getElementById('sonyFidelityBar').style.width = '99%';
+                document.getElementById('sonyFidelityLatency').innerText = '~0 ms (Wired) / ~30 ms (LDAC)';
+                document.getElementById('sonyFidelityLatency').style.color = 'var(--win)';
+                document.getElementById('sonyFidelityQuality').innerText = 'Hi-Res Audio (Certified)';
+            }
+        }
+
+        // 3D Parallax Tilt Effect for Hero Spotlights
+        const spotlightCards = document.querySelectorAll('.brand-spotlight');
+
+        spotlightCards.forEach(card => {
+            const image = card.querySelector('.product-image');
+
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'transform 0.1s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s';
+                if (image) {
+                    image.style.transition = 'transform 0.1s cubic-bezier(0.25, 1, 0.5, 1)';
+                }
+            });
+
+            card.addEventListener('mousemove', (e) => {
+                const cardRect = card.getBoundingClientRect();
+                
+                // Position relative to card center
+                const cardX = e.clientX - cardRect.left - cardRect.width / 2;
+                const cardY = e.clientY - cardRect.top - cardRect.height / 2;
+                
+                // Normalized coordinate offsets (-0.5 to 0.5)
+                const percentX = cardX / (cardRect.width / 2);
+                const percentY = cardY / (cardRect.height / 2);
+                
+                // Rotate card up to 12 degrees
+                const rotateY = percentX * 12;
+                const rotateX = -percentY * 12;
+                
+                // Rotate and tilt card
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale3d(1.01, 1.01, 1.01)`;
+                
+                // Push product image slightly in the same/opposite directions for 3D parallax depth layering
+                if (image) {
+                    image.style.animationPlayState = 'paused';
+                    const imgX = percentX * 15;
+                    const imgY = percentY * 15;
+                    image.style.transform = `translate3d(${imgX}px, ${imgY}px, 50px) rotateY(${rotateY * 0.5}deg) rotateX(${rotateX * 0.5}deg) scale(1.05)`;
+                }
+            });
+
+            card.addEventListener('mouseleave', () => {
+                // Smoothly restore defaults
+                card.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s';
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale3d(1, 1, 1)';
+                
+                if (image) {
+                    image.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+                    image.style.animationPlayState = 'running';
+                    image.style.transform = '';
+                }
+            });
+        });
     </script>
 </body>
 
