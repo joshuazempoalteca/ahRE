@@ -1453,11 +1453,20 @@
         .verdict-panel.sony-winner h3 {
             color: var(--sony-gold);
         }
+        [data-theme="light"] .verdict-panel.sony-winner h3 {
+            color: #b45309; /* High-contrast readable gold/amber */
+        }
 
         .verdict-panel p {
             font-size: 0.9rem;
             line-height: 1.75;
             color: var(--text-secondary);
+        }
+
+        [data-theme="light"] .verdict-panel {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(15, 23, 42, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
         }
 
 
